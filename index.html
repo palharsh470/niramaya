@@ -1,4 +1,3 @@
-index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,17 @@ index.html
   <title>Niramay - Smart Farming Solutions</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    nav ul li{
+      height: 3rem; 
+      padding: 0.25rem;
+      display: flex;
+      align-items: center;
+
+    }
+    nav ul li:hover{
+      border: 1px solid #22c55e;
+      box-shadow:0px 0px 8px #22c55e;
+    }
     body {
       font-family: 'Poppins', sans-serif;
       transition: background 0.3s, color 0.3s;
@@ -52,12 +62,12 @@ index.html
 
     /* ✅ Light Theme Fix */
     body.light h1, 
-    body.light h2, 
-    body.light h3, 
+    /* body.light h2, 
+    body.light h3,  */
     body.light h4, 
     body.light p, 
     body.light a {
-      color: #1a1a1a !important;
+      color: #f1f1f1 !important;
     }
     body.light .bg-gray-800 { background-color: #f3f3f3 !important; }
     body.light .text-gray-300 { color: #333 !important; }
@@ -102,12 +112,12 @@ index.html
   <div id="settings-modal" class="hidden fixed inset-0 bg-black/70 flex justify-center items-center z-50">
     <div class="modal bg-white/10 backdrop-blur-xl dark:bg-gray-800 p-8 rounded-2xl shadow-2xl text-center w-80 border border-gray-600">
       <button id="close-settings" class="absolute top-3 right-3 text-red-400 text-xl hover:scale-125 transition">❌</button>
-      <h3 class="text-2xl font-bold text-green-400 mb-4">⚙️ Settings</h3>
-      <p class="text-gray-300 mb-4">Choose Theme</p>
+      <h3 class="text-2xl font-bold text-green-400 mb-4" style="color:white">⚙️ Settings</h3>
+      <p class="text-gray-300 mb-4" style="color: white;">Choose Theme</p>
       <div class="flex justify-around">
-        <button id="dark-mode" class="px-4 py-2 bg-green-500 text-black rounded-lg hover:scale-105 transition btn-animate">Dark 🌙</button>
-        <button id="light-mode" class="px-4 py-2 bg-gray-300 text-black rounded-lg hover:scale-105 transition btn-animate">Light ☀️</button>
-        <button id="system-mode" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:scale-105 transition btn-animate">System 💻</button>
+        <button id="dark-mode" class="px-4 py-2 bg-green-500 text-black rounded-full hover:scale-105 transition btn-animate mr-4">Dark 🌙</button>
+        <button id="light-mode" class="px-4 py-2 bg-gray-300 text-black rounded-full hover:scale-105 transition btn-animate mr-4">Light ☀️</button>
+        <button id="system-mode" class="px-4 py-2 bg-blue-500 text-white rounded-full hover:scale-105 transition btn-animate">System 💻</button>
       </div>
     </div>
   </div>

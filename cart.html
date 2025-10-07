@@ -1,0 +1,154 @@
+cart.html
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Your Cart - Niramay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #0a0a0a; color: #f1f1f1; }
+    .card { background: #0f1724; border-radius: 10px; }
+    .muted { color: #9ca3af; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <header class="flex justify-between items-center p-4 bg-black shadow-lg">
+    <h1 class="text-2xl font-bold text-green-400">Niramay</h1>
+    <a href="ecommerce.html" class="text-green-400 hover:underline">← Continue Shopping</a>
+  </header>
+
+  <!-- Cart content -->
+  <main class="flex-1 p-6 max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6">🛒 Your Cart</h2>
+
+    <div id="cart-items" class="space-y-4 mb-6"></div>
+
+    <div class="p-4 card shadow-lg max-w-md">
+      <div class="flex justify-between items-center mb-3">
+        <div class="muted">Subtotal</div>
+        <div id="cart-subtotal" class="text-lg font-bold">₹0</div>
+      </div>
+      <div class="flex justify-between items-center mb-4">
+        <div class="muted">GST (placeholder)</div>
+        <div id="cart-gst" class="text-sm muted">—</div>
+      </div>
+      <div class="flex justify-between items-center mb-4 text-xl font-bold">
+        <div>Total</div>
+        <div id="cart-total">₹0</div>
+      </div>
+
+      <button id="buy-now" class="w-full bg-green-500 text-black py-2 rounded-lg font-semibold hover:bg-green-600">Buy Now</button>
+    </div>
+  </main>
+
+  <footer class="bg-black text-center p-4 mt-auto text-gray-400">
+    © 2025 Niramay | Smart Farming Marketplace 🌿
+  </footer>
+
+  <script>
+    // Utilities
+    function normalizePrice(p) {
+      if (typeof p === 'number') return p;
+      return Number(String(p).replace(/[^\d.]/g, '')) || 0;
+    }
+    function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+
+    // DOM hooks
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+    const cartTotal = document.getElementById('cart-total');
+    const cartGst = document.getElementById('cart-gst');
+
+    // load cart
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function saveCart() {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cartItemsContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `<p class="muted">Your cart is empty. <a href="ecommerce.html" class="text-green-400 underline">Shop now</a></p>`;
+      } else {
+        cart.forEach((item, idx) => {
+          // ensure price is numeric (handles older stored values with commas)
+          const price = normalizePrice(item.price);
+          const qty = Number(item.qty) || 1;
+          const sub = price * qty;
+
+          const div = document.createElement('div');
+          div.className = 'flex justify-between items-center p-4 card shadow';
+          div.innerHTML = `
+            <div>
+              <div class="font-semibold">${item.name}</div>
+              <div class="muted">${fmt(price)} × ${qty} = <span class="text-yellow-400 font-bold">${fmt(sub)}</span></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-1 rounded bg-gray-800 incdec" data-idx="${idx}" data-action="dec">−</button>
+              <div class="px-2">${qty}</div>
+              <button class="px-3 py-1 rounded bg-gray-800 incdec" data-idx="${idx}" data-action="inc">+</button>
+              <button class="ml-3 text-red-400 remove" data-idx="${idx}" title="Remove">❌</button>
+            </div>
+          `;
+          cartItemsContainer.appendChild(div);
+        });
+      }
+
+      // totals
+      let subtotal = cart.reduce((s, it) => s + normalizePrice(it.price) * (it.qty || 1), 0);
+      // placeholder GST 0% (change as needed)
+      let gst = 0;
+      let total = subtotal + gst;
+
+      cartSubtotal.textContent = fmt(subtotal);
+      cartGst.textContent = gst === 0 ? '₹0' : fmt(gst);
+      cartTotal.textContent = fmt(total);
+
+      // attach listeners
+      document.querySelectorAll('.incdec').forEach(btn => {
+        btn.onclick = () => {
+          const idx = Number(btn.dataset.idx);
+          const action = btn.dataset.action;
+          if (action === 'inc') cart[idx].qty = (cart[idx].qty || 1) + 1;
+          else if (action === 'dec' && (cart[idx].qty || 1) > 1) cart[idx].qty = (cart[idx].qty || 1) - 1;
+          saveCart();
+          renderCart();
+        };
+      });
+
+      document.querySelectorAll('.remove').forEach(btn => {
+        btn.onclick = () => {
+          const idx = Number(btn.dataset.idx);
+          cart.splice(idx, 1);
+          saveCart();
+          renderCart();
+        };
+      });
+    }
+
+    // Buy Now (placeholder)
+    document.getElementById('buy-now').addEventListener('click', () => {
+      if (!cart || cart.length === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+      // Simple placeholder flow: clear cart and say thanks
+      alert('Thank you for the purchase! (This is a demo — implement payment + backend to complete checkout.)');
+      cart = [];
+      saveCart();
+      renderCart();
+    });
+
+    // Initial render
+    renderCart();
+  </script>
+</body>
+</html>
